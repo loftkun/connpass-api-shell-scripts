@@ -1,4 +1,5 @@
 #! /bin/bash
+set -eu
 
 # ref. https://connpass.com/about/api/
 
@@ -12,6 +13,8 @@ order=3
 
 #keyword_or=福岡,fukuoka
 #address_matcher='福岡|北九州|fukuoka'
+
+found_count=0
 
 # search
 search () {
@@ -35,6 +38,12 @@ search () {
 
       # echo ${event} | jq -r '. | (.event_id | tostring) + " | " + .started_at + " | " + .title + " | " + .address+ " | " + .event_url'
       echo ${event}
+
+      # judge
+      found_count=$((found_count+1))
+      if [ ${found_count} -eq ${max_count} ]; then
+        exit
+      fi
   done
 }
 
@@ -42,18 +51,11 @@ main () {
   while true;
   do
       search
-
-      # max_count
-      if [ ${max_count} -eq 0 ]; then
-        max_count=${results_available}
-      fi
-
-      # judge
       start=$(($start + $len))
-      if [ ${start} -ge ${max_count} ]; then
+      if [ ${start} -gt ${results_available} ]; then
         exit
       fi
-      #echo "${start}/${results_available}"
+      sleep 5
   done
 }
 
