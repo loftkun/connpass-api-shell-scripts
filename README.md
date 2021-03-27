@@ -1,4 +1,4 @@
-# connpass-api-shell-scripts
+# connpass-client-bash
 
 shell scripts for [connpass API](https://connpass.com/about/api/)
 
